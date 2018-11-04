@@ -1,29 +1,23 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Polly;
-using Polly.CircuitBreaker;
 using ProArch.CodingTest.Common.Models;
-using ProArch.CodingTest.Common.Exception;
 using ProArch.CodingTest.Common.Repository;
-using ProArch.CodingTest.Common.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace ProArch.CodingTest.Services.UnitTests
 {
     [TestClass]
     public class InternalInvoiceServiceTests
     {
-        private InternalInvoiceService GetInstance(IQueryable<InvoiceData> testInvoices = null)
+        private InternalInvoiceService GetInstance(IQueryable<Invoice> testInvoices = null)
         {
             // setup invoice repo
-            var invoiceRepositoryMock = new Mock<IInvoiceRespository>();
-            invoiceRepositoryMock.Setup(repo => repo.WithInvoices(It.IsAny<Action<IQueryable<InvoiceData>>>()))
-                    .Callback<Action<IQueryable<InvoiceData>>>(a =>
+            var invoiceRepositoryMock = new Mock<IInvoiceRepository>();
+            invoiceRepositoryMock.Setup(repo => repo.WithInvoices(It.IsAny<Action<IQueryable<Invoice>>>()))
+                    .Callback<Action<IQueryable<Invoice>>>(a =>
                     {
-                        a(testInvoices ?? (new InvoiceData[0]).AsQueryable());
+                        a(testInvoices ?? (new Invoice[0]).AsQueryable());
                     });
 
             return new InternalInvoiceService(invoiceRepositoryMock.Object);
@@ -34,21 +28,21 @@ namespace ProArch.CodingTest.Services.UnitTests
         {
             // arrange
             var invoices = new[] {
-                new InvoiceData()
+                new Invoice()
             {
                 Id = 1,
                 InvoiceDate = new DateTime(2018,1,1),
                 SupplierId = 1,
                 Amount = 10
             },
-                new InvoiceData()
+                new Invoice()
             {
                 Id = 1,
                 InvoiceDate = new DateTime(2018,1,2),
                 SupplierId = 1,
                 Amount = 20
             },
-                new InvoiceData()
+                new Invoice()
             {
                 Id = 1,
                 InvoiceDate = new DateTime(2017,1,2),
@@ -82,7 +76,7 @@ namespace ProArch.CodingTest.Services.UnitTests
             var instance = GetInstance();
 
             // assert
-            Assert.AreEqual(InvoiceServiceType.Internal, instance.ServiceType);
+            Assert.AreEqual(InvoiceServiceCategory.Internal, instance.ServiceType);
         }
     }
 }

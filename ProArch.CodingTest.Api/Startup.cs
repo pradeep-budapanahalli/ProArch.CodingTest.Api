@@ -38,19 +38,21 @@ namespace ProArch.CodingTest.Api
             var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreaker(exceptionCount, TimeSpan.FromSeconds(breakDuration));
 
             services.AddSingleton<Policy>(_ => circuitBreakerPolicy);
-            services.AddDbContext<IProArchDbContext, ProArchDbContext>(options =>
+            services.AddDbContext<CodingTestDbContext, CodingTestDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("proarch")));
+            services.AddDbContext<ICodingTestDbContext, CodingTestDbContext>(options =>
                      options.UseSqlServer(Configuration.GetConnectionString("proarch")));
 
-            services.AddScoped<IInvoiceRespository, InvoiceRespository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRespository>();
             services.AddScoped<ISpendService, SpendService>();
             services.AddScoped<IInvoiceService, Services.ExternalInvoiceService>();
             services.AddScoped<IInvoiceService, InternalInvoiceService>();
             services.AddScoped<IInvoiceService>(_ => new FailoverInvoiceService(Configuration.GetValue<int>("FailoverValidDays")));
-            services.AddScoped<IInvoiceServiceStrategy>(s =>
+            services.AddScoped<IInvoiceServiceProvider>(s =>
             {
-                return new InvoiceServiceStrategy(s.GetServices<IInvoiceService>());
+                return new InvoiceServiceProvider(s.GetServices<IInvoiceService>());
             });
-            services.AddScoped<ISupplierRespository, SupplierRespository>();
+            services.AddScoped<ISupplierRepository, SupplierRespository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

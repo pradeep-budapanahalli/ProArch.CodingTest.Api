@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProArch.CodingTest.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ProArch.CodingTest.Common.Repository
 {
-    public interface IProArchDbContext : IDisposable
+    public interface ICodingTestDbContext : IDisposable
     {
-        DbSet<SupplierData> Suppliers { get; set; }
+        DbSet<Supplier> Suppliers { get; set; }
 
-        DbSet<InvoiceData> Invoices { get; set; }
+        DbSet<Invoice> Invoices { get; set; }
     }
 }

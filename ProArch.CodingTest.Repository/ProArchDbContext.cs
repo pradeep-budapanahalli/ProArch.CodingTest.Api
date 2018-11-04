@@ -1,25 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProArch.CodingTest.Common.Models;
 using ProArch.CodingTest.Common.Repository;
 
 namespace ProArch.CodingTest.Repository
 {
-    public class ProArchDbContext : DbContext, IProArchDbContext
+    public class CodingTestDbContext : DbContext, ICodingTestDbContext
     {
-        public ProArchDbContext(DbContextOptions<ProArchDbContext> options)
+        public CodingTestDbContext(DbContextOptions<CodingTestDbContext> options)
             : base(options)
         {
 
         }
-        public DbSet<SupplierData> Suppliers { get; set; }
-        public DbSet<InvoiceData> Invoices { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-
-        //    string connstr = optionsBuilder.
-        //        "Data Source=codingtest.database.windows.net;Initial Catalog=proarchdb;Integrated Security=false;User=proarchadmin;Password=pass@word1";// 
-        //       // ConfigurationManager.ConnectionStrings[0].ConnectionString;            
-        //    optionsBuilder.UseSqlServer(connstr);
-        //}
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }      
     }
 }

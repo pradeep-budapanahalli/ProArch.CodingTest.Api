@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProArch.CodingTest.Common.Repository
+namespace ProArch.CodingTest.Common.Models
 {
-    public class SupplierData
+    public class Supplier
     {
         [Key]
         public int Id { get; set; }

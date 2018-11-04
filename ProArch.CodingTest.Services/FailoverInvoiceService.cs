@@ -21,7 +21,7 @@ namespace ProArch.CodingTest.Services
         public DateTime Timestamp { get; set; }
         public ExternalInvoice[] Invoices { get; set; }
 
-        public InvoiceServiceType ServiceType => InvoiceServiceType.Failover;
+        public InvoiceServiceCategory ServiceType => InvoiceServiceCategory.Failover;
 
         public IEnumerable<SpendDetail> GetSpendDetails(int supplierId)
         {

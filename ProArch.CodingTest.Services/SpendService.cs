@@ -14,11 +14,11 @@ namespace ProArch.CodingTest.Services
 {
     public class SpendService : ISpendService
     {
-        private ISupplierRespository supplierRepository;
-        private IInvoiceServiceStrategy invoiceServiceStrategy;
+        private ISupplierRepository supplierRepository;
+        private IInvoiceServiceProvider invoiceServiceStrategy;
         private Policy policy;
         
-        public SpendService(ISupplierRespository supplerRepository, IInvoiceServiceStrategy invoiceServiceStrategy, Policy policy)
+        public SpendService(ISupplierRepository supplerRepository, IInvoiceServiceProvider invoiceServiceStrategy, Policy policy)
         {
             this.supplierRepository = supplerRepository;
             this.invoiceServiceStrategy = invoiceServiceStrategy;
@@ -32,7 +32,7 @@ namespace ProArch.CodingTest.Services
             {
                 if (supplier == null)
                 {
-                    throw new ApplicationException(string.Format("Invalide Supplier Id {0}", supplierId));
+                    throw new ApplicationException(string.Format("Invalid Supplier Id {0}", supplierId));
                 }
                 summary = new SpendSummary
                 {
@@ -45,16 +45,16 @@ namespace ProArch.CodingTest.Services
         }
     
 
-        private List<SpendDetail> GetSpendDetails(SupplierData supplier)
+        private List<SpendDetail> GetSpendDetails(Supplier supplier)
         {
-            var serviceType = supplier.IsExternal ? InvoiceServiceType.External : InvoiceServiceType.Internal;
+            var serviceType = supplier.IsExternal ? InvoiceServiceCategory.External : InvoiceServiceCategory.Internal;
             try
             {
                 List<SpendDetail> summary = null;
                 policy.Execute(() =>
                 {
                     summary = invoiceServiceStrategy.GetService(serviceType)
-                        .GetSpendDetails(supplier.Id)?.ToList();
+                                                    .GetSpendDetails(supplier.Id)?.ToList();
                 });
                 return summary;
             }
@@ -63,7 +63,7 @@ namespace ProArch.CodingTest.Services
                 if (ex is BrokenCircuitException ||
                 ex is ExternalInvoiceServiceException)
                 {
-                    return invoiceServiceStrategy.GetService(InvoiceServiceType.Failover)
+                    return invoiceServiceStrategy.GetService(InvoiceServiceCategory.Failover)
                         .GetSpendDetails(supplier.Id)
                         .ToList();
                 }

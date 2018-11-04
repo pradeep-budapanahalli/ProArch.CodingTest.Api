@@ -62,7 +62,7 @@ namespace ProArch.CodingTest.Services.UnitTests
             var instance = new ExternalInvoiceService();
 
             // assert
-            Assert.AreEqual(InvoiceServiceType.External, instance.ServiceType);
+            Assert.AreEqual(InvoiceServiceCategory.External, instance.ServiceType);
         }
     }
 }

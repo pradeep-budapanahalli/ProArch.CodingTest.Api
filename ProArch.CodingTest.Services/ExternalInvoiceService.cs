@@ -10,7 +10,7 @@ namespace ProArch.CodingTest.Services
 {
     public class ExternalInvoiceService : IInvoiceService
     {
-        public InvoiceServiceType ServiceType => InvoiceServiceType.External;
+        public InvoiceServiceCategory ServiceType => InvoiceServiceCategory.External;
 
         public IEnumerable<SpendDetail> GetSpendDetails(int supplierId)
         {

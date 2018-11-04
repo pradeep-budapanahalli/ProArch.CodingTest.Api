@@ -10,14 +10,14 @@ namespace ProArch.CodingTest.Services
 {
     public class InternalInvoiceService : IInvoiceService
     {
-        private IInvoiceRespository repository;
+        private IInvoiceRepository repository;
 
-        public InternalInvoiceService(IInvoiceRespository repository)
+        public InternalInvoiceService(IInvoiceRepository repository)
         {
             this.repository = repository;
         }
 
-        public InvoiceServiceType ServiceType => InvoiceServiceType.Internal;
+        public InvoiceServiceCategory ServiceType => InvoiceServiceCategory.Internal;
 
         public IEnumerable<SpendDetail> GetSpendDetails(int supplierId)
         {

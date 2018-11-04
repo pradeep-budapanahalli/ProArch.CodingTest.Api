@@ -7,7 +7,7 @@ namespace ProArch.CodingTest.Common.Services
 {
     public interface IInvoiceService
     {
-        InvoiceServiceType ServiceType { get; }
+        InvoiceServiceCategory ServiceType { get; }
         IEnumerable<SpendDetail> GetSpendDetails(int supplierId);
     }
 }

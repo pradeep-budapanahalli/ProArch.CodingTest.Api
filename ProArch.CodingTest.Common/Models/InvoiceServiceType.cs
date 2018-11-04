@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProArch.CodingTest.Common.Models
 {
-    public enum InvoiceServiceType
+    public enum InvoiceServiceCategory
     {
         Internal,
         External,

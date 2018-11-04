@@ -1,4 +1,5 @@
-﻿using ProArch.CodingTest.Common.Repository;
+﻿using ProArch.CodingTest.Common.Models;
+using ProArch.CodingTest.Common.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +7,15 @@ using System.Text;
 
 namespace ProArch.CodingTest.Repository
 {
-    public class InvoiceRespository : IInvoiceRespository
+    public class InvoiceRespository : IInvoiceRepository
     {
-        private IProArchDbContext dbContext;
+        private ICodingTestDbContext dbContext;
 
-        public InvoiceRespository(IProArchDbContext dbContext)
+        public InvoiceRespository(ICodingTestDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
-        public void WithInvoices(Action<IQueryable<InvoiceData>> processor)
+        public void WithInvoices(Action<IQueryable<Invoice>> processor)
         {
             using (dbContext)
             {

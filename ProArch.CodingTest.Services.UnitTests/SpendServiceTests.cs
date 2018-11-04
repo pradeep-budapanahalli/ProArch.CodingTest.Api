@@ -16,21 +16,21 @@ namespace ProArch.CodingTest.Services.UnitTests
     [TestClass]
     public class SpendServiceTests
     {
-        private SpendService GetInstance(SupplierData[] testSuppliers, Dictionary<InvoiceServiceType, IInvoiceService> strategyMapping, Policy policy = null)
+        private SpendService GetInstance(Supplier[] testSuppliers, Dictionary<InvoiceServiceCategory, IInvoiceService> strategyMapping, Policy policy = null)
         {
             // setup SupplierRepository
-            var supplierRepositoryMock = new Mock<ISupplierRespository>();
+            var supplierRepositoryMock = new Mock<ISupplierRepository>();
             foreach (var supplier in testSuppliers)
             {
-                supplierRepositoryMock.Setup(repo => repo.WithSupplierCompany(It.IsAny<Action<SupplierData>>(), supplier.Id))
-                    .Callback<Action<SupplierData>, int>((a, id) =>
+                supplierRepositoryMock.Setup(repo => repo.WithSupplierCompany(It.IsAny<Action<Supplier>>(), supplier.Id))
+                    .Callback<Action<Supplier>, int>((a, id) =>
                      {
                          a(supplier);
                      });
             }
 
             // setup IInvoiceServiceStrategy
-            var strategyMock = new Mock<IInvoiceServiceStrategy>();
+            var strategyMock = new Mock<IInvoiceServiceProvider>();
             foreach (var kvp in strategyMapping)
             {
                 strategyMock.Setup(s => s.GetService(kvp.Key))
@@ -52,7 +52,7 @@ namespace ProArch.CodingTest.Services.UnitTests
         public void ShouldReturnCorrectInternalTotalSpend()
         {
             // arrange
-            var expectedSupplier = new SupplierData()
+            var expectedSupplier = new Supplier()
             {
                 Id = 1,
                 IsExternal = false,
@@ -67,8 +67,8 @@ namespace ProArch.CodingTest.Services.UnitTests
             mockInvoiceService.Setup(svc => svc.GetSpendDetails(1))
                 .Returns(expectedYears);
 
-            var strategyMapping = new Dictionary<InvoiceServiceType, IInvoiceService>(){
-                { InvoiceServiceType.Internal, mockInvoiceService.Object } };
+            var strategyMapping = new Dictionary<InvoiceServiceCategory, IInvoiceService>(){
+                { InvoiceServiceCategory.Internal, mockInvoiceService.Object } };
 
 
             var instance = GetInstance(new[] { expectedSupplier }, strategyMapping);
@@ -93,7 +93,7 @@ namespace ProArch.CodingTest.Services.UnitTests
         public void ShouldReturnCorrectExtrernalTotalSpend()
         {
             // arrange
-            var expectedSupplier = new SupplierData()
+            var expectedSupplier = new Supplier()
             {
                 Id = 1,
                 IsExternal = true,
@@ -108,8 +108,8 @@ namespace ProArch.CodingTest.Services.UnitTests
             mockInvoiceService.Setup(svc => svc.GetSpendDetails(1))
                 .Returns(expectedYears);
 
-            var strategyMapping = new Dictionary<InvoiceServiceType, IInvoiceService>(){
-                { InvoiceServiceType.External, mockInvoiceService.Object } };
+            var strategyMapping = new Dictionary<InvoiceServiceCategory, IInvoiceService>(){
+                { InvoiceServiceCategory.External, mockInvoiceService.Object } };
 
 
             var instance = GetInstance(new[] { expectedSupplier }, strategyMapping);
@@ -134,7 +134,7 @@ namespace ProArch.CodingTest.Services.UnitTests
         public void ShouldReturnFailoverDataOnExternalExcpetion()
         {
             // arrange
-            var expectedSupplier = new SupplierData()
+            var expectedSupplier = new Supplier()
             {
                 Id = 1,
                 IsExternal = true,
@@ -155,9 +155,9 @@ namespace ProArch.CodingTest.Services.UnitTests
             mockFailoverInvoiceService.Setup(svc => svc.GetSpendDetails(1))
                 .Returns(expectedYears);
 
-            var strategyMapping = new Dictionary<InvoiceServiceType, IInvoiceService>(){
-                { InvoiceServiceType.External, mockExternalInvoiceService.Object },
-                { InvoiceServiceType.Failover, mockFailoverInvoiceService.Object }
+            var strategyMapping = new Dictionary<InvoiceServiceCategory, IInvoiceService>(){
+                { InvoiceServiceCategory.External, mockExternalInvoiceService.Object },
+                { InvoiceServiceCategory.Failover, mockFailoverInvoiceService.Object }
             };
 
             var instance = GetInstance(new[] { expectedSupplier }, strategyMapping);
@@ -182,13 +182,13 @@ namespace ProArch.CodingTest.Services.UnitTests
         public void ShouldReturnFailoverDataAfterConfiguredNumberOfExternalExcpetions()
         {
             // arrange
-            var goodSuplier = new SupplierData()
+            var goodSuplier = new Supplier()
             {
                 Id = 1,
                 IsExternal = true,
                 Name = "Test Good External Suppliing Co",
             };
-            var badSuplier = new SupplierData()
+            var badSuplier = new Supplier()
             {
                 Id = 2,
                 IsExternal = true,
@@ -220,9 +220,9 @@ namespace ProArch.CodingTest.Services.UnitTests
             mockFailoverInvoiceService.Setup(svc => svc.GetSpendDetails(It.IsAny<int>()))
                 .Returns(failoverInvoiceYears);
 
-            var strategyMapping = new Dictionary<InvoiceServiceType, IInvoiceService>(){
-                { InvoiceServiceType.External, mockExternalInvoiceService.Object },
-                { InvoiceServiceType.Failover, mockFailoverInvoiceService.Object }
+            var strategyMapping = new Dictionary<InvoiceServiceCategory, IInvoiceService>(){
+                { InvoiceServiceCategory.External, mockExternalInvoiceService.Object },
+                { InvoiceServiceCategory.Failover, mockFailoverInvoiceService.Object }
             };
 
             // setup to fall back after 2 external excpetions.
@@ -263,13 +263,13 @@ namespace ProArch.CodingTest.Services.UnitTests
         public void ShouldReturnExternalDataAfterConfiguredNumberOfExternalExcpetionsAndConfiguredWaitPeriod()
         {
             // arrange
-            var goodSuplier = new SupplierData()
+            var goodSuplier = new Supplier()
             {
                 Id = 1,
                 IsExternal = true,
                 Name = "Test Good External Suppliing Co",
             };
-            var badSuplier = new SupplierData()
+            var badSuplier = new Supplier()
             {
                 Id = 2,
                 IsExternal = true,
@@ -301,9 +301,9 @@ namespace ProArch.CodingTest.Services.UnitTests
             mockFailoverInvoiceService.Setup(svc => svc.GetSpendDetails(It.IsAny<int>()))
                 .Returns(failoverInvoiceYears);
 
-            var strategyMapping = new Dictionary<InvoiceServiceType, IInvoiceService>(){
-                { InvoiceServiceType.External, mockExternalInvoiceService.Object },
-                { InvoiceServiceType.Failover, mockFailoverInvoiceService.Object }
+            var strategyMapping = new Dictionary<InvoiceServiceCategory, IInvoiceService>(){
+                { InvoiceServiceCategory.External, mockExternalInvoiceService.Object },
+                { InvoiceServiceCategory.Failover, mockFailoverInvoiceService.Object }
             };
             // setup to fall back after given no of external excpetions and for given wait duration
             int waitDurationInSecond = 5;

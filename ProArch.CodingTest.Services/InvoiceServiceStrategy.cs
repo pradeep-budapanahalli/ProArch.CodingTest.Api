@@ -6,25 +6,24 @@ using System.Text;
 
 namespace ProArch.CodingTest.Services
 {
-    public class InvoiceServiceStrategy : IInvoiceServiceStrategy
-    {
-        
-        private Dictionary<InvoiceServiceType, IInvoiceService> invoiceServiceStrategy;
-        public InvoiceServiceStrategy(IEnumerable<IInvoiceService> invoiceServices)
+    public class InvoiceServiceProvider : IInvoiceServiceProvider
+    {        
+        private Dictionary<InvoiceServiceCategory, IInvoiceService> invoiceServiceProviders;
+        public InvoiceServiceProvider(IEnumerable<IInvoiceService> invoiceServices)
         {
-            this.invoiceServiceStrategy = new Dictionary<InvoiceServiceType, IInvoiceService>();
+            this.invoiceServiceProviders = new Dictionary<InvoiceServiceCategory, IInvoiceService>();
             foreach (var service in invoiceServices)
             {
-                invoiceServiceStrategy.TryAdd(service.ServiceType, service);
+                invoiceServiceProviders.TryAdd(service.ServiceType, service);
             }
         }
-        public IInvoiceService GetService(InvoiceServiceType serviceType)
+        public IInvoiceService GetService(InvoiceServiceCategory serviceType)
         {
-            if (!invoiceServiceStrategy.ContainsKey(serviceType))
+            if (!invoiceServiceProviders.ContainsKey(serviceType))
             {
                 throw new ApplicationException("External Invoice Service not configured.");
             }
-            return invoiceServiceStrategy[serviceType];
+            return invoiceServiceProviders[serviceType];
         }
     }
 }

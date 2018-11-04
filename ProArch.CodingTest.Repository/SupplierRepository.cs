@@ -1,4 +1,5 @@
-﻿using ProArch.CodingTest.Common.Repository;
+﻿using ProArch.CodingTest.Common.Models;
+using ProArch.CodingTest.Common.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +7,15 @@ using System.Text;
 
 namespace ProArch.CodingTest.Repository
 {
-    public class SupplierRespository : ISupplierRespository
+    public class SupplierRespository : ISupplierRepository
     {
-        private IProArchDbContext dbContext;
+        private ICodingTestDbContext dbContext;
 
-        public SupplierRespository(IProArchDbContext dbContext)
+        public SupplierRespository(ICodingTestDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
-        public void WithSupplierCompany(Action<SupplierData> processor,int id)
+        public void WithSupplierCompany(Action<Supplier> processor,int id)
         {
             using (dbContext)
             {

@@ -6,8 +6,8 @@ using System.Text;
 
 namespace ProArch.CodingTest.Common.Repository
 {
-    public interface ISupplierRepository
+    public interface IInvoiceRepository
     {
-        void WithSupplierCompany(Action<Supplier> processor,int id);
+        void WithInvoices(Action<IQueryable<Invoice>> processor);
     }
 }
