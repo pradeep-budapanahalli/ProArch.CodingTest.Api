@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Polly;
 using Polly.CircuitBreaker;
-using ProArch.CodingTest.Common.DTO;
+using ProArch.CodingTest.Common.Models;
 using ProArch.CodingTest.Common.Exception;
 using ProArch.CodingTest.Common.Repository;
 using ProArch.CodingTest.Common.Services;

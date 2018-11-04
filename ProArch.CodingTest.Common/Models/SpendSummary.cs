@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProArch.CodingTest.Common.DTO
+namespace ProArch.CodingTest.Common.Models
 {
     public class SpendSummary
     {

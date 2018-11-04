@@ -1,4 +1,4 @@
-﻿using ProArch.CodingTest.Common.DTO;
+﻿using ProArch.CodingTest.Common.Models;
 using ProArch.CodingTest.Common.Exception;
 using ProArch.CodingTest.Common.Services;
 using ProArch.CodingTest.External;

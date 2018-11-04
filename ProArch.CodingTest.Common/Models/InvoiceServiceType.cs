@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProArch.CodingTest.Common.DTO
+namespace ProArch.CodingTest.Common.Models
 {
     public enum InvoiceServiceType
     {
